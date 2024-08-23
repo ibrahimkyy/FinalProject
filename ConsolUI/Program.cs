@@ -1,21 +1,48 @@
 ﻿using Business.Concrete;
+using DataAccess.Abstract;
+using DataAccess.Concrete.EntityFremwork;
 using DataAccess.Concrete.İnMemory;
 using System.Reflection;
 
 namespace ConsolUI
 {
-    internal class Program
+    public class Program
     {
         static void Main(string[] args)
         {
-            ProdactManager productManager = new ProdactManager(new InMemoryProductDal());
+            ProductTest();
+            // CategoryTest();
+        }
 
-            foreach (var product in productManager.GetAll()) 
+        private static void CategoryTest()
+        {
+            CategoryManager categoryManager = new CategoryManager(new EfCategoryDal());
+
+            foreach (var category in categoryManager.GetAll())
             {
-                Console.WriteLine(product.ProductName);
+                Console.WriteLine(category.CategoryName);
+            }
+        }
+
+        private static void ProductTest()
+        {
+            ProductManager productManager = new ProductManager(new EfProductDal());
+
+            var result = productManager.GetProductDetails();
+
+            if (result.Success == true)
+            {
+                foreach (var product in result.Data)
+                {
+                    Console.WriteLine(product.ProductName + "/" + product.CategoryName);
+                }
+            }
+            else
+            {
+                Console.WriteLine(result.Message);
             }
 
-
         }
+
     }
 }
