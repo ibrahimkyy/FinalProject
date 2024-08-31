@@ -11,21 +11,31 @@ namespace WebAPI.Controllers
     [ApiController]
     public class ProductsController : ControllerBase
     {
-        //Loosely Coupled--zayıf bağlılık soyuta bağlılık
-        //IoS Container -- Inversion of Control  belleğe atıp ihtiyaç halinde kullandırma
-        IProductServis _productServis;
 
-        public ProductsController(IProductServis productServis)
+        //Loosely coupled
+        //Naming Convention
+        //IoC Container -- Inversion of Control
+        IProductService _productService;
+
+        public ProductsController(IProductService productService)
         {
-            _productServis = productServis;
+            _productService = productService;
         }
 
-        [HttpGet("getall")]//ürünleri gösterme
-        public IActionResult Get()
+        [HttpGet("getall")]
+        public IActionResult GetAll()
         {
-            var result = _productServis.GetAll();
-            //Dependency chain- bağımlılık zinciri  p.servise p.manager barındırdığından bu şekilde yazık ayrıca p.servis p.managere ihtiyaç duyuyo p.manager p.dala ihtiyaç duyuyo 
-            // IProductServis productServis = new ProductManager(new EfProductDal());
+            var result = _productService.GetAll();
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result);
+        }
+        [HttpGet("getbyid")]
+        public IActionResult GetById(int id)
+        {
+            var result = _productService.GetById(id);
             if (result.Success)
             {
                 return Ok(result);
@@ -33,26 +43,10 @@ namespace WebAPI.Controllers
             return BadRequest(result);
         }
 
-
-        [HttpGet("getbyıd")]
-        public IActionResult Get(int id)
-        {
-            var result =_productServis.GetById(id);
-            if (result.Success)
-            {
-                return Ok(result);
-            }
-            return BadRequest(result);
-
-
-
-
-        }
-
-        [HttpPost("add")]//ürünleri ekleme
+        [HttpPost("add")]
         public IActionResult Add(Product product)
         {
-            var result = _productServis.Add(product);
+            var result = _productService.Add(product);
             if (result.Success)
             {
                 return Ok(result);
@@ -61,4 +55,18 @@ namespace WebAPI.Controllers
         }
 
     }
+
+    /*[HttpGet("getbycategoryid/{id}")]
+    public IActionResult GetByCategoryId(int id)
+    {
+        var result = _productServis.GetAllByCategoryId(id);
+        if (result.Success)
+        {
+            return Ok(result);
+        }
+        return BadRequest(result);
+    }*/
 }
+
+
+

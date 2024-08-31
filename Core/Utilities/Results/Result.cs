@@ -26,5 +26,6 @@ namespace Core.Utilities.Results
         //Burda set konulmamasına rağmen cevap yazıyo olmamızın sebebi okunurluğu standardize etmek 
         public string Message { get; }
 
+     
     }
 }
